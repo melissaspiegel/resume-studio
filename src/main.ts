@@ -1,0 +1,34 @@
+import {LitElement, css, html} from 'lit';
+import {customElement, state} from 'lit/decorators.js';
+import 'mdui/mdui.css';
+import 'mdui/components/button.js';
+import 'mdui/components/text-field.js';
+import {AllCommunityModule, createGrid, type GridApi, type GridOptions} from 'ag-grid-community';
+import {ModuleRegistry} from 'ag-grid-community';
+import {emptyResume, parseResume, sampleResume, textToDraft, type Experience, type Resume} from './model';
+import {extractPdfText} from './pdf';
+ModuleRegistry.registerModules([AllCommunityModule]);
+const storageKey = 'resume-starter-v1';
+@customElement('resume-app')
+class ResumeApp extends LitElement {
+  @state() private resume: Resume = emptyResume();
+  @state() private status = '';
+  private grid?: GridApi<Experience>;
+  static styles = css`
+    :host{display:block;font:16px system-ui;color:#20212a;background:#f5f6fa;min-height:100vh}*{box-sizing:border-box}
+    header{padding:1rem 2rem;background:#293249;color:white}h1{margin:0;font-size:1.5rem}header p{margin:.3rem 0 0}
+    main{display:grid;grid-template-columns:minmax(320px,1fr) minmax(400px,1fr);gap:1.5rem;padding:1.5rem;max-width:1500px;margin:auto}
+    section{background:white;padding:1.25rem;border-radius:12px;min-width:0}h2{margin-top:0;font-size:1.2rem}h3{margin-bottom:.4rem}
+    .actions{display:flex;flex-wrap:wrap;gap:.5rem;margin-bottom:1rem;align-items:center}mdui-text-field{display:block;margin:.6rem 0}label.file{cursor:pointer;border:1px solid #56617b;border-radius:5px;padding:.55rem;color:#293249}input[type=file]{position:absolute;width:1px;height:1px;opacity:0}.grid{height:245px;width:100%}
+    .paper{background:white;color:#171717;max-width:8.5in;min-height:11in;padding:.7in;margin:auto;box-shadow:0 2px 12px #ddd;font:11pt/1.4 Arial,sans-serif;overflow-wrap:anywhere}
+    .paper h2{font-size:22pt;margin:0}.paper h3{border-bottom:1px solid #888;font-size:11pt;text-transform:uppercase;margin:1.2em 0 .5em}.paper p{white-space:pre-wrap;margin:.3em 0}.muted{color:#555}.hint{font-size:.85rem;color:#555}pre{white-space:pre-wrap;font:inherit}
+    @media(max-width:900px){main{display:block}section{margin-bottom:1rem}}@media print{@page{size:letter;margin:0}body{background:white!important}header,.editor,.print-button{display:none!important}main{display:block;padding:0}.preview{padding:0;border:0}.preview>h2{display:none}.paper{box-shadow:none;max-width:none;min-height:0;padding:.7in}}
+  `;
+  connectedCallback(){super.connectedCallback();try{const saved=localStorage.getItem(storageKey);if(saved)this.resume=parseResume(saved)}catch{this.status='Saved draft could not be loaded.'}}
+  firstUpdated(){const el=this.renderRoot.querySelector<HTMLElement>('.grid');if(!el)return;const options:GridOptions<Experience>={rowData:this.resume.experience,getRowId:p=>p.data.id,rowSelection:{mode:'multiRow'},columnDefs:[{field:'role',editable:true,flex:1},{field:'company',editable:true,flex:1},{field:'dates',editable:true,flex:1},{field:'details',editable:true,flex:2}],defaultColDef:{resizable:true},onCellValueChanged:()=>this.commit({...this.resume,experience:[...this.resume.experience]})};this.grid=createGrid(el,options)}
+  private commit(next:Resume){this.resume=next;this.grid?.setGridOption('rowData',next.experience);try{localStorage.setItem(storageKey,JSON.stringify(next));this.status='Saved in this browser.'}catch{this.status='Browser storage unavailable. Download JSON to keep your work.'}}
+  private field(key: 'name'|'headline'|'contact'|'summary'|'skills'|'importedText',label:string,rows=1){return html`<mdui-text-field label=${label} .value=${this.resume[key]} ?autosize=${rows>1} .minRows=${rows} @input=${(e:Event)=>this.commit({...this.resume,[key]:(e.target as HTMLInputElement).value})}></mdui-text-field>`}
+  private downloadJson(){const url=URL.createObjectURL(new Blob([JSON.stringify(this.resume,null,2)],{type:'application/json'}));const a=document.createElement('a');a.href=url;a.download='resume.json';a.click();setTimeout(()=>URL.revokeObjectURL(url),1000)}
+  private async importFile(e:Event){const input=e.target as HTMLInputElement;const file=input.files?.[0];if(!file)return;try{if(file.name.toLowerCase().endsWith('.json'))this.commit(parseResume(await file.text()));else if(file.type==='application/pdf'||file.name.toLowerCase().endsWith('.pdf')){const text=await extractPdfText(file);this.commit(textToDraft(text));this.status=text?'PDF text extracted. Review and move it into the fields.':'No selectable text found. Scanned PDFs need OCR (TODO).'}else throw new Error('Choose a PDF or resume JSON file.')}catch(err){this.status=`Import failed: ${err instanceof Error?err.message:String(err)}`}finally{input.value=''}}
+  render(){const r=this.resume;return html`<header><h1>Resume Studio</h1><p>Editable data → print-ready resume</p></header><main><section class="editor"><h2>Edit</h2><div class="actions"><mdui-button @click=${()=>this.commit(sampleResume())}>Start from template</mdui-button><mdui-button variant="outlined" @click=${()=>this.commit(emptyResume())}>Blank resume</mdui-button><label class="file" for="import">Import PDF or JSON</label><input id="import" type="file" accept=".pdf,application/pdf,.json,application/json" @change=${this.importFile}><mdui-button variant="outlined" @click=${this.downloadJson}>Download JSON</mdui-button></div><p role="status" aria-live="polite">${this.status}</p>${this.field('name','Name')}${this.field('headline','Headline')}${this.field('contact','Contact')}${this.field('summary','Summary',4)}${this.field('skills','Skills',2)}<h3>Experience</h3><p class="hint">Double-click a cell to edit. Select a row to remove it.</p><div class="grid" aria-label="Experience table"></div><div class="actions"><mdui-button @click=${()=>this.commit({...r,experience:[...r.experience,{id:crypto.randomUUID(),role:'',company:'',dates:'',details:''}]})}>Add experience</mdui-button><mdui-button variant="outlined" @click=${()=>{const ids=new Set(this.grid?.getSelectedRows().map(x=>x.id));this.commit({...r,experience:r.experience.filter(x=>!ids.has(x.id))})}}>Remove selected</mdui-button></div>${r.importedText?html`<h3>Imported PDF text</h3><p class="hint">Copy relevant content into the structured fields; extraction may reorder columns.</p>${this.field('importedText','Extracted text',8)}`:''}</section><section class="preview"><h2>Preview</h2><div class="actions print-button"><mdui-button @click=${()=>window.print()}>Save as PDF / Print</mdui-button></div><article class="paper" aria-label="Resume preview"><h2>${r.name||'Your Name'}</h2><p>${r.headline}</p><p class="muted">${r.contact}</p>${r.summary?html`<h3>Profile</h3><p>${r.summary}</p>`:''}${r.skills?html`<h3>Skills</h3><p>${r.skills}</p>`:''}${r.experience.length?html`<h3>Experience</h3>${r.experience.map(x=>html`<div><strong>${x.role}</strong> · ${x.company}<p class="muted">${x.dates}</p><p>${x.details}</p></div>`)}`:''}</article></section></main>`}
+}
