@@ -21,7 +21,7 @@ Import a text-based PDF to extract its text with PDF.js. The extraction lands in
 
 - `src/resume/`: the data layer, split by concern — `resume.types.ts` (schema), `resume.defaults.ts` (`emptyResume`), `resume.parser.ts` (`parseResume` validation + `textToDraft`), `resume.migrations.ts` (v1 draft migration), `resume.normalizers.ts` (shared `toString`/`toId`/`toStringArray`/`normalize*` helpers), `resume.fixtures.ts` (`sampleResume`). `index.ts` re-exports the public API.
 - `src/pdf.ts`: local PDF text extraction, no server upload.
-- `src/main.ts`: Lit app shell — sidebar nav, topbar actions, section-card editor, and a live template-aware preview. Icons come from `@mdui/icons` (SVG components, no icon font).
+- `src/main.ts`: Lit app shell — sidebar nav, topbar actions, section-card editor, and a live template-aware preview. Renders in **light DOM** (`createRenderRoot() { return this; }`) so headings and landmarks are exposed to assistive tech and a11y linters; app styles live in `src/app.css` scoped under `resume-app`. Icons come from `@mdui/icons` (SVG components, no icon font).
 - `tests/model.test.ts`: data validation, v1 migration, and PDF draft mapping.
 - Browser print generates the PDF from the same structured preview, so formatting remains under your control.
 

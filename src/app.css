@@ -1,0 +1,278 @@
+/* Global styles for <resume-app> — the app renders in light DOM so headings and landmarks are visible to assistive tech. */
+
+    resume-app {
+      --accent: #6c4df4;
+      --accent-ink: #5b3ee6;
+      --accent-soft: #efecfe;
+      --bg: #f4f5fb;
+      --card: #ffffff;
+      --ink: #1e2230;
+      --muted: #6b7280;
+      --faint: #9aa1b2;
+      --line: #e8eaf2;
+      --ok: #16a34a;
+      display: flex;
+      min-height: 100vh;
+      font: 15px/1.5 'Inter', system-ui, -apple-system, sans-serif;
+      color: var(--ink);
+      background: var(--bg);
+    }
+    resume-app .mdui-theme-dark resume-app {
+      --accent-soft: #28224d;
+      --bg: #14161f;
+      --card: #1d2029;
+      --ink: #e8eaf2;
+      --muted: #9aa1b2;
+      --faint: #6b7280;
+      --line: #2b2f3d;
+    }
+    resume-app * { box-sizing: border-box; }
+
+    /* ---------- sidebar ---------- */
+    resume-app .sidebar {
+      width: 244px; flex: none; background: var(--card); border-right: 1px solid var(--line);
+      display: flex; flex-direction: column; padding: 20px 14px; gap: 22px;
+      position: sticky; top: 0; height: 100vh;
+    }
+    resume-app .brand { display: flex; gap: 12px; align-items: flex-start; padding: 0 4px; }
+    resume-app .brand-icon {
+      width: 40px; height: 40px; flex: none; border-radius: 10px; display: grid; place-items: center;
+      background: var(--accent); color: #fff; box-shadow: 0 4px 10px color-mix(in srgb, var(--accent) 35%, transparent);
+    }
+    resume-app .brand-icon mdui-icon-description--rounded { font-size: 22px; }
+    resume-app .brand h1 { margin: 0; font-size: 1.05rem; font-weight: 700; }
+    resume-app .brand p { margin: 2px 0 0; font-size: .72rem; color: var(--muted); line-height: 1.35; }
+    resume-app .nav { display: flex; flex-direction: column; gap: 4px; }
+    resume-app .nav button {
+      display: flex; align-items: center; gap: 12px; width: 100%; padding: 10px 14px;
+      border: 0; border-radius: 10px; background: none; color: var(--muted);
+      font: inherit; font-weight: 500; cursor: pointer; text-align: left; position: relative;
+    }
+    resume-app .nav button:hover { background: var(--bg); color: var(--ink); }
+    resume-app .nav button.active { background: var(--accent-soft); color: var(--accent-ink); font-weight: 600; }
+    resume-app .nav button.active::before {
+      content: ''; position: absolute; left: -14px; top: 8px; bottom: 8px; width: 4px;
+      border-radius: 0 4px 4px 0; background: var(--accent);
+    }
+    resume-app .nav [class^='mdui-icon-'] { font-size: 21px; }
+    resume-app .tip { margin-top: auto; background: var(--accent-soft); border-radius: 14px; padding: 14px; }
+    resume-app .tip-title { display: flex; align-items: center; gap: 7px; font-weight: 700; font-size: .85rem; color: var(--accent-ink); }
+    resume-app .tip-title mdui-icon-lightbulb--rounded { font-size: 17px; color: #f59e0b; }
+    resume-app .tip p { margin: 6px 0 0; font-size: .75rem; color: var(--muted); line-height: 1.45; }
+
+    /* ---------- shell / topbar ---------- */
+    resume-app .shell { flex: 1; min-width: 0; display: flex; flex-direction: column; }
+    resume-app .topbar {
+      display: flex; justify-content: flex-end; align-items: center; gap: 10px;
+      padding: 14px 28px; border-bottom: 1px solid var(--line); background: var(--card);
+    }
+    resume-app .topbar mdui-button-icon { color: var(--muted); }
+    resume-app .topbar mdui-button { --shape-corner: 10px; }
+    resume-app mdui-button { --mdui-color-primary: var(--accent); }
+    resume-app mdui-button[variant='filled'] { background: var(--accent); color: #fff; }
+    resume-app mdui-button[variant='outlined'] { border-color: var(--line); color: var(--ink); }
+
+    /* ---------- workspace ---------- */
+    resume-app .workspace { display: grid; grid-template-columns: minmax(400px, 560px) minmax(0, 1fr); gap: 26px; padding: 26px 28px; align-items: start; }
+    resume-app .panel-head { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 16px; }
+    resume-app .panel-head h2 { margin: 0; font-size: 1.25rem; font-weight: 700; }
+    resume-app .panel-head .sub { margin: 3px 0 0; font-size: .83rem; color: var(--muted); }
+    resume-app .saved { display: inline-flex; align-items: center; gap: 5px; font-size: .75rem; font-weight: 600; color: var(--ok); white-space: nowrap; }
+    resume-app .saved mdui-icon-check-circle--rounded { font-size: 15px; }
+    resume-app .saved.err { color: #dc2626; font-weight: 500; }
+
+    resume-app .actions { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 18px; align-items: center; }
+    resume-app input[type='file'] { position: absolute; width: 1px; height: 1px; opacity: 0; pointer-events: none; }
+
+    /* ---------- cards ---------- */
+    resume-app .card { background: var(--card); border: 1px solid var(--line); border-radius: 14px; padding: 18px; margin-bottom: 16px; }
+    resume-app .card-head { display: flex; align-items: center; gap: 10px; margin-bottom: 14px; }
+    resume-app .card-head h3 { margin: 0; font-size: .95rem; font-weight: 700; flex: 1; }
+    resume-app .card-icon {
+      width: 32px; height: 32px; flex: none; border-radius: 9px; display: grid; place-items: center;
+      background: var(--accent-soft); color: var(--accent-ink);
+    }
+    resume-app .card-icon [class^='mdui-icon-'] { font-size: 18px; }
+    resume-app .edit-link {
+      display: inline-flex; align-items: center; gap: 5px; border: 0; background: none; cursor: pointer;
+      color: var(--accent-ink); font: inherit; font-size: .82rem; font-weight: 600; padding: 4px 6px; border-radius: 6px;
+    }
+    resume-app .edit-link:hover { background: var(--accent-soft); }
+    resume-app .edit-link [class^='mdui-icon-'] { font-size: 15px; }
+
+    resume-app .field-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px 14px; }
+    resume-app .fld { display: flex; flex-direction: column; gap: 5px; min-width: 0; }
+    resume-app .fld.span2 { grid-column: 1 / -1; }
+    resume-app .fld > span { font-size: .78rem; font-weight: 600; color: var(--muted); }
+    resume-app mdui-text-field { width: 100%; }
+    resume-app mdui-text-field::part(input) { font-size: .88rem; }
+    resume-app .view-rows { display: grid; grid-template-columns: 1fr 1fr; gap: 8px 14px; }
+    resume-app .view-rows div { min-width: 0; }
+    resume-app .view-rows dt { font-size: .72rem; font-weight: 600; color: var(--faint); text-transform: uppercase; letter-spacing: .04em; }
+    resume-app .view-rows dd { margin: 2px 0 0; font-size: .88rem; overflow-wrap: anywhere; }
+    resume-app .summary-box {
+      border: 1px solid var(--line); border-radius: 10px; padding: 12px 14px;
+      font-size: .88rem; color: var(--ink); white-space: pre-wrap; overflow-wrap: anywhere;
+    }
+    resume-app .summary-box.empty { color: var(--faint); }
+
+    /* ---------- chips ---------- */
+    resume-app .chips { display: flex; flex-wrap: wrap; gap: 8px; align-items: center; }
+    resume-app mdui-chip { font-weight: 600; font-size: .8rem; }
+    resume-app mdui-chip::part(button) { background: var(--accent-soft); color: var(--accent-ink); }
+    resume-app mdui-chip [slot='delete-icon'] { font-size: 14px; }
+    resume-app .dashed {
+      display: inline-flex; align-items: center; gap: 6px; padding: 7px 14px; cursor: pointer;
+      border: 1.5px dashed color-mix(in srgb, var(--accent) 55%, transparent); border-radius: 999px;
+      background: none; color: var(--accent-ink); font: inherit; font-size: .82rem; font-weight: 600;
+    }
+    resume-app .dashed:hover { background: var(--accent-soft); }
+    resume-app .dashed.wide { width: 100%; justify-content: center; padding: 10px; border-radius: 10px; }
+    resume-app .dashed [class^='mdui-icon-'] { font-size: 16px; }
+    resume-app .add-skill { display: inline-flex; align-items: center; gap: 6px; }
+    resume-app .add-skill mdui-text-field { width: 150px; }
+
+    /* ---------- experience / education entries ---------- */
+    resume-app .entry { display: flex; gap: 4px; padding: 10px 0; }
+    resume-app .entry + .entry { border-top: 1px solid var(--line); }
+    resume-app .grip { color: var(--faint); font-size: 18px; margin-top: 2px; cursor: grab; flex: none; }
+    resume-app .entry-body { flex: 1; min-width: 0; }
+    resume-app .entry-top { display: flex; align-items: center; justify-content: space-between; gap: 8px; }
+    resume-app .entry-top strong { font-size: .95rem; }
+    resume-app .entry-top mdui-button-icon { color: var(--muted); }
+    resume-app .entry-company { margin: 1px 0; color: var(--accent-ink); font-size: .85rem; font-weight: 600; }
+    resume-app .entry-meta { display: flex; align-items: center; gap: 5px; margin: 2px 0 6px; color: var(--muted); font-size: .78rem; }
+    resume-app .entry-meta [class^='mdui-icon-'] { font-size: 14px; }
+    resume-app .entry-body ul { margin: 4px 0 0; padding-left: 18px; font-size: .85rem; color: var(--ink); }
+    resume-app .entry-body li { margin: 2px 0; }
+    resume-app .entry-form { display: flex; flex-direction: column; gap: 10px; padding: 6px 0 2px; }
+    resume-app .entry-form .row2 { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+    resume-app .empty-note { color: var(--faint); font-size: .85rem; margin: 6px 0 10px; }
+    resume-app .note { margin: 0 0 10px; font-size: .8rem; color: var(--muted); }
+
+    /* ---------- template picker ---------- */
+    resume-app .tpl-row { display: flex; align-items: flex-end; gap: 14px; margin-bottom: 18px; }
+    resume-app .tpl-field { display: flex; flex-direction: column; gap: 5px; }
+    resume-app .tpl-field > span { font-size: .78rem; font-weight: 600; color: var(--muted); }
+    resume-app mdui-select { min-width: 130px; }
+    resume-app .thumbs { display: flex; gap: 10px; margin-left: auto; }
+    resume-app .thumb {
+      width: 52px; height: 66px; border-radius: 6px; cursor: pointer; padding: 6px;
+      border: 2px solid var(--line); background: #fff; display: flex; flex-direction: column; gap: 4px;
+      transition: border-color .15s, box-shadow .15s;
+    }
+    resume-app .thumb:hover { border-color: var(--faint); }
+    resume-app .thumb.sel { border-color: var(--accent); box-shadow: 0 0 0 2px color-mix(in srgb, var(--accent) 25%, transparent); }
+    resume-app .thumb i { display: block; height: 4px; border-radius: 2px; background: #c9cede; }
+    resume-app .thumb i:first-child { height: 6px; width: 60%; }
+    resume-app .thumb.modern { border-left-width: 5px; border-left-color: #d5cef8; }
+    resume-app .thumb.modern.sel { border-left-color: var(--accent); }
+    resume-app .thumb.classic i { margin: 0 auto; }
+    resume-app .thumb.classic i:first-child { width: 45%; }
+    resume-app .thumb.dark { background: #232a3d; } .thumb.dark i { background: #4a5470; }
+    resume-app .thumb.dark i:first-child { background: #8b97b5; }
+
+    /* ---------- resume paper ---------- */
+    resume-app .paper-wrap { display: flex; justify-content: center; }
+    resume-app .paper {
+      background: #fff; color: #191c26; width: 100%; max-width: 780px; min-height: 900px;
+      border-radius: 4px; box-shadow: 0 2px 8px rgb(20 22 40 / 8%), 0 12px 32px rgb(20 22 40 / 10%);
+      padding: 44px 48px; font-size: .9rem; line-height: 1.5; overflow-wrap: anywhere;
+    }
+    resume-app .r-name { margin: 0; font-size: 1.9rem; font-weight: 800; letter-spacing: -.01em; }
+    resume-app .r-headline { margin: 2px 0 0; font-size: 1rem; font-weight: 600; color: var(--accent-ink); }
+    resume-app .r-contact { display: flex; flex-wrap: wrap; gap: 6px 18px; margin: 10px 0 0; font-size: .8rem; color: #565d70; }
+    resume-app .r-contact span { display: inline-flex; align-items: center; gap: 5px; }
+    resume-app .r-contact svg, resume-app .r-contact [class^='mdui-icon-'] { width: 14px; height: 14px; font-size: 14px; fill: #565d70; color: #565d70; }
+    resume-app .r-sec { margin-top: 26px; }
+    resume-app .r-sec > h3 {
+      display: flex; align-items: center; gap: 10px; margin: 0 0 10px;
+      font-size: .82rem; font-weight: 800; letter-spacing: .07em; text-transform: uppercase; color: #191c26;
+    }
+    resume-app .sec-icon {
+      width: 26px; height: 26px; flex: none; border-radius: 50%; display: grid; place-items: center;
+      background: var(--accent); color: #fff;
+    }
+    resume-app .sec-icon [class^='mdui-icon-'] { font-size: 14px; }
+    resume-app .r-sec p { margin: 0; font-size: .86rem; color: #333a4d; }
+    resume-app .r-pills { display: flex; flex-wrap: wrap; gap: 7px; }
+    resume-app .r-pills span {
+      background: var(--accent-soft); color: var(--accent-ink); font-weight: 600;
+      font-size: .74rem; padding: 4px 12px; border-radius: 999px;
+    }
+    resume-app .r-job { margin-top: 14px; }
+    resume-app .r-job:first-of-type { margin-top: 2px; }
+    resume-app .r-job-head { display: flex; justify-content: space-between; align-items: baseline; gap: 12px; }
+    resume-app .r-job-head strong { font-size: .95rem; }
+    resume-app .r-dates { font-size: .76rem; color: #6b7280; white-space: nowrap; }
+    resume-app .r-company { margin: 1px 0; font-size: .84rem; font-weight: 600; color: var(--accent-ink); }
+    resume-app .r-loc { font-size: .76rem; color: #6b7280; margin: 0 0 5px; }
+    resume-app .r-job ul { margin: 4px 0 0; padding-left: 18px; font-size: .85rem; color: #333a4d; }
+    resume-app .r-job li { margin: 3px 0; }
+    resume-app .r-job li::marker { color: var(--accent); }
+
+    /* template variants */
+    resume-app .paper.tpl-modern { border-left: 7px solid var(--accent); }
+    resume-app .paper.tpl-classic { font-family: Georgia, 'Times New Roman', serif; }
+    resume-app .paper.tpl-classic .r-name { text-align: center; font-weight: 700; }
+    resume-app .paper.tpl-classic .r-headline, resume-app .paper.tpl-classic .r-contact { justify-content: center; text-align: center; color: #444; }
+    resume-app .paper.tpl-classic .r-headline { font-weight: 400; font-style: italic; }
+    resume-app .paper.tpl-classic .sec-icon { display: none; }
+    resume-app .paper.tpl-classic .r-sec > h3 { border-bottom: 1px solid #999; padding-bottom: 5px; letter-spacing: .12em; }
+    resume-app .paper.tpl-classic .r-company, resume-app .paper.tpl-classic .r-headline { color: #191c26; }
+    resume-app .paper.tpl-classic .r-pills span { background: none; border: 1px solid #bbb; color: #333a4d; }
+    resume-app .paper.tpl-classic .r-job li::marker { color: #191c26; }
+    resume-app .paper.tpl-minimal .sec-icon { display: none; }
+    resume-app .paper.tpl-minimal .r-sec > h3 { color: #6b7280; letter-spacing: .14em; font-weight: 700; }
+    resume-app .paper.tpl-minimal .r-headline { color: #191c26; }
+    resume-app .paper.tpl-minimal .r-company { color: #191c26; font-weight: 500; }
+    resume-app .paper.tpl-minimal .r-pills span { background: #f0f1f5; color: #333a4d; }
+    resume-app .paper.tpl-minimal .r-job li::marker { color: #9aa1b2; }
+    resume-app .paper.tpl-dark { padding-top: 0; }
+    resume-app .paper.tpl-dark .r-head { background: #232a3d; color: #fff; margin: 0 -48px 26px; padding: 34px 48px 28px; }
+    resume-app .paper.tpl-dark .r-headline { color: #b9c2ff; }
+    resume-app .paper.tpl-dark .r-contact { color: #c4cadb; }
+    resume-app .paper.tpl-dark .r-contact svg, resume-app .paper.tpl-dark .r-contact [class^='mdui-icon-'] { fill: #c4cadb; color: #c4cadb; }
+    resume-app .paper.tpl-dark .sec-icon { background: #232a3d; }
+
+    /* ---------- misc panels ---------- */
+    resume-app .panel { background: var(--card); border: 1px solid var(--line); border-radius: 14px; padding: 22px; }
+    resume-app .panel h3 { margin: 0 0 6px; font-size: 1rem; }
+    resume-app .panel p { margin: 0 0 14px; font-size: .85rem; color: var(--muted); }
+    resume-app .swatches { display: flex; gap: 10px; }
+    resume-app .swatch {
+      width: 40px; height: 40px; border-radius: 50%; border: 2px solid transparent; cursor: pointer; padding: 0;
+    }
+    resume-app .swatch.sel { border-color: var(--ink); box-shadow: 0 0 0 2px var(--card), 0 0 0 4px var(--line); }
+    resume-app .settings-row { display: flex; align-items: center; justify-content: space-between; gap: 12px; padding: 12px 0; }
+    resume-app .settings-row + .settings-row { border-top: 1px solid var(--line); }
+    resume-app .settings-row .lbl { font-size: .9rem; font-weight: 600; }
+    resume-app .settings-row .hint { font-size: .78rem; color: var(--muted); margin: 2px 0 0; }
+    resume-app .gallery { display: grid; grid-template-columns: repeat(auto-fill, minmax(160px, 1fr)); gap: 16px; margin-top: 8px; }
+    resume-app .gallery .thumb { width: 100%; height: 150px; gap: 8px; padding: 12px; }
+    resume-app .gallery .thumb i { height: 8px; }
+    resume-app .gallery .thumb i:first-child { height: 12px; }
+    resume-app .gallery-name { display: block; margin-top: 6px; font-size: .82rem; font-weight: 600; text-align: center; color: var(--muted); }
+
+    @media (max-width: 1080px) {
+      resume-app .workspace { grid-template-columns: 1fr; }
+      resume-app .sidebar { width: 74px; padding: 20px 10px; }
+      resume-app .brand div:not(.brand-icon), resume-app .nav button span, resume-app .tip p, resume-app .tip-title { display: none; }
+      resume-app .nav button { justify-content: center; padding: 10px; }
+      resume-app .tip { display: grid; place-items: center; padding: 10px; }
+      resume-app .tip::after { content: '💡'; }
+    }
+    @media (max-width: 640px) {
+      resume-app .sidebar { display: none; }
+      resume-app .field-grid, resume-app .entry-form .row2 { grid-template-columns: 1fr; }
+      resume-app .tpl-row { flex-wrap: wrap; } resume-app .thumbs { margin-left: 0; }
+    }
+    @media print {
+      @page { size: letter; margin: 0; }
+      resume-app { display: block; background: #fff; }
+      resume-app .sidebar, resume-app .topbar, resume-app .editor, resume-app .tpl-row, resume-app .panel-head { display: none !important; }
+      resume-app .workspace { display: block; padding: 0; }
+      resume-app .paper { box-shadow: none; max-width: none; min-height: 0; border-radius: 0; width: auto; }
+      resume-app .paper.tpl-modern { border-left-width: 0; }
+    }
+  
