@@ -1,17 +1,17 @@
-# Resume Studio starter
+# Resume Studio
 
-Lit + TypeScript + MDUI 2 + AG Grid Community + Vite + Vitest. The app runs entirely in the browser.
+Lit + TypeScript + MDUI 2 (+ `@mdui/icons`) + Vite + Vitest. The app runs entirely in the browser.
 
 ## Run
 
 ```sh
-npm install
-npm run dev
-npm test
-npm run build
+pnpm install
+pnpm dev
+pnpm test
+pnpm build
 ```
 
-Open the URL printed by Vite. Use **Start from template** or **Blank resume**. Edit fields and double-click experience cells. A draft auto-saves in this browser. Download JSON as a portable editable backup. Use **Save as PDF / Print**, then choose “Save as PDF” in the browser print dialog. Test page breaks before sending a resume.
+Open the URL printed by Vite. The app starts with a sample resume. Edit fields in the **Content** panel — the preview and autosave update live. Sections have an **Edit/Done** toggle; skills are chips you can delete or add; experience and education entries have an inline editor via their **⋯** menu. **Import PDF**/**Import JSON** restore a draft; the **⋯** menu offers **Download JSON** and **Blank resume**. **Templates** and **Design** in the sidebar switch the resume template and accent color; **Settings** has dark mode and draft management. **Download PDF** opens the browser print dialog — choose "Save as PDF". Test page breaks before sending a resume.
 
 ## PDF import: what it actually does
 
@@ -19,22 +19,20 @@ Import a text-based PDF to extract its text with PDF.js. The extraction lands in
 
 ## Design
 
-- `src/model.ts`: serializable resume schema, example template, import draft mapping.
+- `src/model.ts`: serializable resume schema (contact links, skill list, experience bullets, education), sample template, import draft mapping, and migration of v1 drafts.
 - `src/pdf.ts`: local PDF text extraction, no server upload.
-- `src/main.ts`: Lit editor, AG Grid experience table, MDUI controls, print preview.
-- `tests/model.test.ts`: data validation and PDF draft mapping.
+- `src/main.ts`: Lit app shell — sidebar nav, topbar actions, section-card editor, and a live template-aware preview. Icons come from `@mdui/icons` (SVG components, no icon font).
+- `tests/model.test.ts`: data validation, v1 migration, and PDF draft mapping.
 - Browser print generates the PDF from the same structured preview, so formatting remains under your control.
 
 ## Next tasks (in order)
 
-- [ ] Split `resume-app` into editor, grid, and preview components; add focus management around import and status messages.
-- [ ] Add structured Education, Projects, Certifications, Links, and multiple bullet points per job.
+- [ ] Split `resume-app` into editor, section-card, and preview components; add focus management around import and status messages.
+- [ ] Add Projects, Certifications, and links sections; drag-to-reorder entries (grip handles are visual only today).
 - [ ] Add multiple named resumes, schema versioning/migrations, and explicit autosave/error handling. Consider IndexedDB for larger drafts.
-- [ ] Build 2–3 semantic HTML/CSS templates with theme tokens, paper-size controls, and page-break handling.
+- [ ] Refine templates: paper-size controls, page-break handling, and per-template font pairing.
 - [ ] Improve import: identify contact details and section headings from PDF text, present suggested mappings for confirmation, and preserve original extracted text. Add fixture PDFs and tests for reading order.
 - [ ] Add an optional OCR path for scanned PDFs, with a visible privacy and processing choice.
 - [ ] Add JSON import/export version checks, recovery UI, and a way to delete local drafts.
 - [ ] Verify keyboard editing, focus, screen-reader labels, zoom, and PDF text selection; test printed output in Chrome/Safari and ATS parsing.
 - [ ] If exact PDF layout editing is required, scope a separate PDF annotation/editor feature. PDF text extraction cannot reconstruct an arbitrary source layout.
-
-AG Grid is used for tabular experience data; the document preview stays semantic HTML. Community edition is sufficient for this starter.

@@ -9,7 +9,7 @@
     "test": "vitest run"
   },
   "dependencies": {
-    "ag-grid-community": "^34.0.0",
+    "@mdui/icons": "^1.0.4",
     "lit": "^3.0.0",
     "mdui": "^2.0.0",
     "pdfjs-dist": "^5.0.0"
