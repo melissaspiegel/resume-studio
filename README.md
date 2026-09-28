@@ -19,7 +19,7 @@ Import a text-based PDF to extract its text with PDF.js. The extraction lands in
 
 ## Design
 
-- `src/model.ts`: serializable resume schema (contact links, skill list, experience bullets, education), sample template, import draft mapping, and migration of v1 drafts.
+- `src/resume/`: the data layer, split by concern — `resume.types.ts` (schema), `resume.defaults.ts` (`emptyResume`), `resume.parser.ts` (`parseResume` validation + `textToDraft`), `resume.migrations.ts` (v1 draft migration), `resume.normalizers.ts` (shared `toString`/`toId`/`toStringArray`/`normalize*` helpers), `resume.fixtures.ts` (`sampleResume`). `index.ts` re-exports the public API.
 - `src/pdf.ts`: local PDF text extraction, no server upload.
 - `src/main.ts`: Lit app shell — sidebar nav, topbar actions, section-card editor, and a live template-aware preview. Icons come from `@mdui/icons` (SVG components, no icon font).
 - `tests/model.test.ts`: data validation, v1 migration, and PDF draft mapping.

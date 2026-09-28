@@ -41,7 +41,7 @@ import '@mdui/icons/share--rounded.js';
 import '@mdui/icons/upload--rounded.js';
 import '@mdui/icons/upload-file--rounded.js';
 import '@mdui/icons/work--rounded.js';
-import {emptyResume, parseResume, sampleResume, textToDraft, type Education, type Experience, type Resume} from './model';
+import {emptyResume, parseResume, sampleResume, textToDraft, type Education, type Experience, type Resume} from './resume';
 import {extractPdfText} from './pdf';
 
 const storageKey = 'resume-starter-v1';
